@@ -1,9 +1,13 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from trie import Trie
+import os 
 
 app = Flask(__name__)
 CORS(app)
+# Get absolute path to words.txt
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+WORDS_FILE_PATH = os.path.join(BASE_DIR, 'words.txt')
 
 # Load dictionary into Trie
 trie = Trie()
