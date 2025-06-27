@@ -3,6 +3,7 @@ from flask_cors import CORS
 from backend.trie import Trie  
 import os
 
+app = Flask(__name__, template_folder='../templates')
 app = Flask(__name__)   # ✅ This was missing
 CORS(app)
 # Load dictionary into Trie
