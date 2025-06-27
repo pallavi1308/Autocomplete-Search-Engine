@@ -40,7 +40,7 @@
                     return;
                 }
 
-                fetch(`http://localhost:5000/suggestions?query=${query}`)
+                    fetch(`/suggestions?query=${query}`)
                     .then(res => res.json())
                     .then(data => {
                         suggestionsList.innerHTML = '';
