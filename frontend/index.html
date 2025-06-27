@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head> 
+    <link rel="stylesheet" href="styles.css">
+    <title>Search Bar</title>
+</head>
+<body>
+    <div class="search-container">
+
+    <form class="form" onsubmit="return false;">
+        <button type="button">
+            <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
+                <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9" stroke="currentColor" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+        </button>
+        <input id="search-input" class="input" placeholder="Search Anything..." required type="text">
+        <button id="reset-button" class="reset" type="reset">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </form>
+
+    <!-- Suggestions list -->
+    <ul id="suggestions-list">
+    </div>
+    <script>
+        const input = document.getElementById('search-input');
+        const suggestionsList = document.getElementById('suggestions-list');
+        let timeout = null;
+
+        input.addEventListener('input', () => {
+            clearTimeout(timeout);
+
+            timeout = setTimeout(() => {
+                const query = input.value.trim();
+
+                if (query === '') {
+                    suggestionsList.innerHTML = '';
+                    return;
+                }
+
+                fetch(`http://localhost:5000/suggestions?query=${query}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        suggestionsList.innerHTML = '';
+                        data.forEach(item => {
+                            const li = document.createElement('li');
+                            li.textContent = item;
+                            li.style.cursor = 'pointer';
+                            li.style.padding = '5px 0';
+
+                            li.onclick = () => {
+                                input.value = item;
+                                suggestionsList.innerHTML = '';
+                            }
+
+                            suggestionsList.appendChild(li);
+                        });
+                    })
+                    .catch(err => {
+                        console.error('Error fetching suggestions:', err);
+                    });
+            }, 300); // Debounce delay
+        });
+
+        // Clear suggestions when reset button is clicked
+        document.getElementById('reset-button').addEventListener('click', () => {
+            suggestionsList.innerHTML = '';
+        });
+    </script>
+</body>
+</html>
