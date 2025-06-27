@@ -1,20 +1,19 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from backend.trie import Trie  
-import os
+from trie import Trie
 
-app = Flask(__name__)   # ✅ This was missing
+app = Flask(__name__)
 CORS(app)
+
 # Load dictionary into Trie
 trie = Trie()
-with open('backend/words.txt', 'r') as f:
+with open('words.txt', 'r') as f:
     for word in f:
         trie.insert(word.strip().lower())
 
 @app.route('/')
 def home():
     return render_template('index.html')
-
 
 @app.route('/suggestions', methods=['GET'])
 def get_suggestions():
